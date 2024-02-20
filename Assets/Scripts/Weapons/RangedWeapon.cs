@@ -52,6 +52,7 @@ namespace YaEm.Weapons
 		private List<IEffect<IWeapon>> _effects;
 		private readonly HashSet<EffectType> _types = new HashSet<EffectType>();
 		private Transform _transform;
+		private bool _canFire = true;
 		private bool _isFiring = false;
 		private bool _isInited = false;
 		private Pool<IProjectile> _projectilePool;
@@ -252,7 +253,8 @@ namespace YaEm.Weapons
 			return _types.Contains(type);
 		}
 
-		public bool CanAttack => !_isFiring;
+		public bool CanFire { get => _canFire; set => _canFire = value; }
+		public bool CanAttack => !_isFiring && _canFire;
 
 		public float DeltaBeforeAttack => throw new NotImplementedException();
 

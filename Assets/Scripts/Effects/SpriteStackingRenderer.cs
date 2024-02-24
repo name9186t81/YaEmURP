@@ -60,7 +60,7 @@ public class SpriteStackingRenderer : MonoBehaviour
 		}
 
 		//Debug.Log(sprite.rect + " " + sprite.name + " " + sprite.rect.x / (float)sprite.texture.width + ", " + sprite.rect.y / (float)sprite.texture.height + ", " + sprite.rect.width / (float)sprite.texture.width + ", "+ sprite.rect.height / (float)sprite.texture.height);
-		result = new InstancedDrawing(GetSpriteMesh(sprite), _material, sprite.texture, 0);
+		result = new InstancedDrawing(GetSpriteMesh(sprite), _material, sprite.texture, 1);
 		_instancedDrawings.Add(sprite, result);
 		return result;
 	}

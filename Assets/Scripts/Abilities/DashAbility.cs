@@ -1,0 +1,113 @@
+using System;
+
+using UnityEngine;
+
+using YaEm.Core;
+using YaEm.Movement;
+
+namespace YaEm.Ability
+{
+	public sealed class DashAbility : IDirectionalAbility, IForce
+	{
+		private Motor _motor;
+		private Vector2 _direction;
+		private Vector2 _factor;
+		private bool _isActive;
+		private bool _cooling;
+		private float _elapsed;
+		private float _elapsedCooldown;
+		private ForceState _state;
+
+		private readonly IAIAbilityInstruction _instruction;
+		private readonly AnimationCurve _growCurve;
+		private readonly float _distance;
+		private readonly float _duration;
+		private readonly float _cooldown;
+		private readonly float _area;
+
+		public DashAbility(AnimationCurve growCurve, float distance, float duration, float cooldown, IAIAbilityInstruction instruction)
+		{
+			_growCurve = growCurve;
+			_distance = distance;
+			_duration = duration;
+			_area = growCurve.Area();
+			_instruction = instruction;
+			_cooldown = cooldown;
+		}
+
+		public Vector2 Direction { set => _direction = value; }
+
+		public AbilityType Type => AbilityType.Directional;
+
+		public IAIAbilityInstruction AIAbilityInstruction => _instruction;
+
+		public Func<Vector2, Vector2> ForceFunc => Evalute;
+
+		public ForceState State { get => _state; set => _state = value; }
+
+		public event Action OnActivate;
+		public event Action OnDeactivate;
+
+		private Vector2 Evalute(Vector2 worldPos)
+		{
+			_elapsed += Time.deltaTime;
+			float delta = _elapsed.Delta(_duration);
+			if (delta > 1f)
+			{
+				_isActive = false;
+				_state = ForceState.Destroyed;
+				_elapsed = 0f;
+				_motor.RemoveForce(this);
+				OnDeactivate?.Invoke();
+				_cooling = true;
+			}
+
+			return _factor * _growCurve.Evaluate(delta);
+		}
+
+		public bool CanUse()
+		{
+			return !(_isActive || _cooling);
+		}
+
+		public void Init(IActor actor)
+		{
+			if(actor is IProvider<Motor> prov)
+			{
+				_motor = prov.Value;
+			}
+			else
+			{
+				Debug.LogWarning("Actor " + actor.Name + " is not movable");
+			}
+
+			_instruction.SetAbility(this);
+		}
+
+		public void Update(float dt)
+		{
+			if (!_cooling) return;
+
+			_elapsedCooldown += dt;
+			if(_elapsedCooldown > _cooldown)
+			{
+				_cooling = false;
+				_elapsedCooldown = 0f;
+			}
+		}
+
+		public void Use()
+		{
+			if (!CanUse()) return;
+
+			_isActive = true;
+			_factor = _direction * _distance / (_area * _duration);
+			_state = ForceState.Alive;
+			_elapsed = 0f;
+			_motor?.AddForce(this);
+			OnActivate?.Invoke();
+		}
+
+		public float Length => _distance;
+	}
+}

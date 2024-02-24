@@ -50,7 +50,7 @@ namespace YaEm
 		}
 		public static Vector2 Perpendicular2(this in Vector2 vector)
 		{
-			return new Vector2(vector.y, vector.x);
+			return new Vector2(vector.y, -vector.x);
 		}
 
 		public static float AngleRadFromVector(this in Vector2 vector)

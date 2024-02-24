@@ -5,8 +5,6 @@ using YaEm.Core;
 using System;
 using System.Collections;
 
-using TMPro;
-
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -111,7 +109,7 @@ namespace YaEm.Weapons
 
 		private void MarkForDestroy()
 		{
-			if(!_markedForDestroy && !gameObject.activeInHierarchy) Destroy(gameObject);
+			if(!_markedForDestroy && !gameObject.activeSelf && gameObject != null) Destroy(gameObject);
 			_markedForDestroy = true;
 		}
 

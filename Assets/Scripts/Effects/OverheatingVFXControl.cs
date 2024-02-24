@@ -33,7 +33,7 @@ namespace YaEm.Effects {
 			if(_weaponSprite != null)
 			{
 				Color.RGBToHSV(_weaponSprite.color, out var h, out var s, out var v);
-				_weaponSprite.color = Color.HSVToRGB(h, 1 - Mathf.Clamp(_overheating.CurrentOverheat, 0f, 0.99f), v);
+				_weaponSprite.color = Color.HSVToRGB(h, 1 - Mathf.Clamp(_overheating.CurrentOverheat * _overheating.CurrentOverheat * _overheating.CurrentOverheat, 0f, 0.99f), v);
 				//why 0.01f is min? because if its zero then unity will turn color into red for some reason
 			}
 		}

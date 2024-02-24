@@ -12,6 +12,7 @@ namespace YaEm.Weapons
         [SerializeField, Range(0, 1f)] private float _increasePerShot;
         [SerializeField] private float _delayBeforeDecreasing;
 		[SerializeField] private bool _blockWeaponUponMaxHeat;
+		[SerializeField] private bool _affectedBySlowMotion;
         private float _elapsedDelay;
 		private float _storedHeat;
 		private float _decreaseDelta;
@@ -40,7 +41,10 @@ namespace YaEm.Weapons
 
 		private void Update()
 		{
-			_elapsedDelay -= Time.deltaTime;
+			float val = 1f;
+			if (_affectedBySlowMotion && ServiceLocator.TryGet<GlobalTimeModifier>(out var mod)) val *= mod.TimeModificator;
+
+			_elapsedDelay -= Time.deltaTime * val;
 			_weapon.CanFire = !_blocked && _storedHeat < 1f;
 			if (_elapsedDelay > 0) return;
 

@@ -11,7 +11,8 @@ namespace YaEm.AI
 		RunningAway  = 2,
 		Idling = 3,
 		Attacking = 4,
-		Initimidating = 5
+		Initimidating = 5,
+		Ability = 6
 	}
 	public sealed class UtilityAI
 	{

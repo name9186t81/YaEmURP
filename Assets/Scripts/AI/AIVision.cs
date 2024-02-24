@@ -152,6 +152,7 @@ namespace YaEm.AI {
 				float angle = dir.AngleRadFromVector();
 				if (angle > angle1 && angle < angle2)
 				{
+					Debug.Log("Spotted");
 					newList.Add(col);
 				}
 			}

@@ -242,7 +242,7 @@ TextureImporter:
         width: 86
         height: 68
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -263,7 +263,7 @@ TextureImporter:
         width: 86
         height: 68
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -284,7 +284,7 @@ TextureImporter:
         width: 86
         height: 68
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -292,6 +292,27 @@ TextureImporter:
       bones: []
       spriteID: df615cf47e75dab47bf83315afd61af4
       internalID: -1883309145
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fst_8
+      rect:
+        serializedVersion: 2
+        x: 18
+        y: 215
+        width: 5
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c614a6c6c36bf1240bd8153a2552edbc
+      internalID: -1037549214
       vertices: []
       indices: 
       edges: []
@@ -313,6 +334,7 @@ TextureImporter:
       fst_7: -1883309145
       fst_2: -487686148
       fst_4: 408871779
+      fst_8: -1037549214
       fst_1: -1348013098
       fst_3: -410712867
   spritePackingTag: 

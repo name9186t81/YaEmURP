@@ -28,7 +28,8 @@ namespace YaEm.AI.States
 				new StandartAttackUtility(),
 				new SupressFire(),
 				new SeekTarget(),
-				new	 ChangePosition()
+				new	ChangePosition(),
+				new RetreatToSavePosition()
 			});
 		}
 

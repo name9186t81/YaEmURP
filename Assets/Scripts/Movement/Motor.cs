@@ -13,7 +13,7 @@ namespace YaEm.Movement
 		private readonly IActor _actor;
 		private readonly ITransformProvider _provider;
 		private readonly Transform _transform;
-		//private readonly GlobalTimeModifier _timeModificator;
+		private readonly GlobalTimeModifier _timeModificator;
 		private float _timeMod = 1f;
 		private Vector2 _lastVelocity;
 		private BaseForce _movementForce;
@@ -41,27 +41,27 @@ namespace YaEm.Movement
 				return;
 			}
 
-			//if(!ServiceLocator.TryGet<GlobalTimeModifier>(out _timeModificator))
-			//{
-			//	Debug.LogWarning("Cannot find Global time modificator");
-			//}
-			//else
-			//{
-			//	_timeMod = _controller == null || _controller.IsEffectedBySlowMotion ? _timeModificator.TimeModificator : 1f;
-			//	_timeModificator.OnTimeModificated += TimeModded;
-			//}
+			if (!ServiceLocator.TryGet<GlobalTimeModifier>(out _timeModificator))
+			{
+				Debug.LogWarning("Cannot find Global time modificator");
+			}
+			else
+			{
+				_timeMod = _controller == null || _controller.IsEffectedBySlowMotion ? _timeModificator.TimeModificator : 1f;
+				_timeModificator.OnTimeModificated += TimeModded;
+			}
 
 			_movementForce = new BaseForce((_) => _controller.DesiredMoveDirection * _speed * _timeMod);
 		}
 
 		~Motor()
 		{
-			//_timeModificator.OnTimeModificated -= TimeModded;
+			_timeModificator.OnTimeModificated -= TimeModded;
 		}
 
 		private void TimeModded()
 		{
-			//_timeMod = _controller == null || _controller.IsEffectedBySlowMotion ? _timeModificator.TimeModificator : 1f;
+			_timeMod = _controller == null || _controller.IsEffectedBySlowMotion ? _timeModificator.TimeModificator : 1f;
 		}
 
 		public void AddRotationVelocity(float velocity)
@@ -74,7 +74,7 @@ namespace YaEm.Movement
 			if (_actor == null) return;
 			UpdateForces();
 			Vector2 velocity = SummarizeForces();
-			_lastVelocity = velocity + _movementForce.ForceFunc(_actor.Position);
+			_lastVelocity = velocity + _movementForce.ForceFunc(_actor.Position) * _timeMod;
 			_rotationVelocity *= 0.8f;
 
 			_provider.Velocity = velocity;

@@ -7,6 +7,7 @@ using YaEm.Health;
 using YaEm.AI.States;
 using System.Collections;
 using UnityEngine;
+using YaEm.Ability;
 
 namespace YaEm.AI
 {
@@ -30,6 +31,7 @@ namespace YaEm.AI
 		[SerializeField] private float _maxTargetRemembranceTime;
 		[SerializeField] private bool _debug;
 
+		private Vector2? _lastSavePosition;
 		private Transform _transform;
 		private AIProfile _mixed;
 		private AIMemory _memory;
@@ -131,6 +133,8 @@ namespace YaEm.AI
 			_vision = GetComponent<AIVision>();
 			_vision.Init(this);
 
+			_vision.OnScan += Scanned;
+
 			if (_controlled is IProvider<IHealth> provider)
 			{
 				_health = provider.Value;
@@ -152,28 +156,56 @@ namespace YaEm.AI
 
 			GetComponent<AITargetPicker>().Init(this);
 
+			bool additionalState = false;
+			IUtility state = null;
+			if(Actor is IProvider<IAbility> prov && prov.Value != null && prov.Value.AIAbilityInstruction != null)
+			{
+				additionalState = true;
+				state = prov.Value.AIAbilityInstruction;
+			}
+
 			_memory = new AIMemory();
-			if (_debug)
+			if (additionalState)
 			{
 				_utilityAI = new UtilityAI(this, new IUtility[]{
 				new IdleState(),
 				new AttackState(),
-				new Intimidate(10, 2, 1)
+				state
 			});
 			}
 			else
 			{
-				_utilityAI = new UtilityAI(this, new IUtility[]{
-				new IdleState(),
-				new AttackState()
-			});
+				_utilityAI = new UtilityAI(this, new IUtility[]
+				{
+					new IdleState(),
+					new AttackState()
+				});
 			}
 			_braveNess = (_mixed.Aggresivness + _mixed.Experience) / 2f;
+		}
+
+		private void Scanned()
+		{
+			if(_vision.EnemiesInRangeCount == 0)
+			{
+				if(!_lastSavePosition.HasValue)
+					_lastSavePosition = Actor.Position;
+			}
+			else
+			{
+				if (_lastSavePosition.HasValue && !_vision.CanSeePoint(_vision.EnemiesInRange[0].Position, _lastSavePosition.Value, false)) return;
+				//Debug.DrawLine(_vision.EnemiesInRange[0].Position, _lastSavePosition.Value, Color.red, 5f);
+				_lastSavePosition = null;
+			}
 		}
 
 		private void Update()
 		{
 			_utilityAI.Update();
+			if (_lastSavePosition.HasValue)
+			{
+				Debug.DrawLine(Position, _lastSavePosition.Value);
+			}
 			//Debug.Log(_utilityAI.CurrentUtility.GetType().ToString());
 		}
 
@@ -253,6 +285,7 @@ namespace YaEm.AI
 
 		public event Action<ControllerAction> ControllerAction;
 
+		public Vector2? LastSavePosition => _lastSavePosition;
 		public StateType State => _utilityAI.CurrentUtility.StateType;
 		public AIMemory Memory => _memory;
 		public float Aggresivness => _mixed.Aggresivness;

@@ -5,12 +5,17 @@ using YaEm.Core;
 using System;
 using UnityEngine;
 using YaEm.Effects;
+using YaEm.Ability;
 
 namespace YaEm
 {
 	[RequireComponent(typeof(Rigidbody2D)), DisallowMultipleComponent()]
-	public sealed class Unit : MonoBehaviour, IActor, IProvider<IHealth>, IProvider<IWeapon>, IProvider<Motor>, ITeamProvider, IDamageReactable
+	public sealed class Unit : MonoBehaviour, 
+		IActor, IProvider<IHealth>, IProvider<IWeapon>, 
+		IProvider<Motor>, IProvider<IAbility>, 
+		ITeamProvider, IDamageReactable
 	{
+		[SerializeField] private AbilityBuilder _builder;
 		[SerializeField] private ControllerType _allowedControllerType;
 		[SerializeField] private int _maxHealth;
 		[SerializeField] private string _name;
@@ -23,6 +28,7 @@ namespace YaEm
 		[SerializeField] private bool _destroyOnDeath = true;
 		[SerializeField] private bool _debug;
 
+		private IAbility _ability;
 		private Transform _cached;
 		private Rigidbody2D _cachedRigidbody;
 		private IHealth _health;
@@ -36,6 +42,7 @@ namespace YaEm
 			_cachedRigidbody = GetComponent<Rigidbody2D>();
 			_motor = new Motor(_speed, _rotationSpeed, this, transform, new RigidbodyVelocityProvider(_cachedRigidbody));
 			_health = new YaEm.Health.Health(_maxHealth, _maxHealth, this);
+			if (_builder != null) _ability = _builder.Build(this);
 
 			if(_destroyOnDeath)
 				_health.OnDeath += (_) => Destroy(gameObject);
@@ -54,14 +61,20 @@ namespace YaEm
 				comps[i].Init(this);
 			}
 
+			if(TryGetComponent<IActorComponent>(out var selfComp))
+			{
+				selfComp.Init(this);
+			}
 			OnInit?.Invoke();
 		}
 
 		private void Update()
 		{
-			_motor.Update(Time.deltaTime);
-			_weapon?.UpdateEffector(Time.deltaTime);
-			_health?.UpdateEffector(Time.deltaTime);
+			float dt = Time.deltaTime;
+			_motor.Update(dt);
+			_weapon?.UpdateEffector(dt);
+			_health?.UpdateEffector(dt);
+			_ability?.Update(dt);
 		}
 
 		public Vector2 Position => _cached.position;
@@ -81,6 +94,8 @@ namespace YaEm
 		public float Scale => _scale;
 
 		public int TeamNumber => _teamNumber;
+
+		ref Ability.IAbility IProvider<Ability.IAbility>.Value => ref _ability;
 
 		public event Action<IController, IController> OnControllerChange;
 		public event Action<int, int> OnTeamNumberChange;

@@ -305,7 +305,7 @@ TextureImporter:
         width: 5
         height: 23
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -313,6 +313,69 @@ TextureImporter:
       bones: []
       spriteID: c614a6c6c36bf1240bd8153a2552edbc
       internalID: -1037549214
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fst_9
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 57
+        width: 58
+        height: 66
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 745efa47fa5000443a7139db68991b84
+      internalID: -173728035
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fst_10
+      rect:
+        serializedVersion: 2
+        x: 13
+        y: 9
+        width: 41
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b33a7fe656056dd46ac5420ebb24789f
+      internalID: -2009197857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: fst_11
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 180
+        width: 14
+        height: 58
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4c27182f5c9dc8d48a8430916e8fed29
+      internalID: -1853115849
       vertices: []
       indices: 
       edges: []
@@ -332,8 +395,11 @@ TextureImporter:
       fst_0: -1406010810
       fst_6: -716989743
       fst_7: -1883309145
+      fst_10: -2009197857
       fst_2: -487686148
       fst_4: 408871779
+      fst_11: -1853115849
+      fst_9: -173728035
       fst_8: -1037549214
       fst_1: -1348013098
       fst_3: -410712867

@@ -187,6 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a985e03500bea747b8ce14153b5573a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _builder: {fileID: 0}
   _allowedControllerType: 1
   _maxHealth: 100
   _name: 
@@ -247,6 +248,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _hitEffectPrefab: {fileID: 1204101089193040240, guid: 4f0ed16c7a117aa458db9393bc028886, type: 3}
+  _excludedTags: 68
   _applyTeamColor: 1
 --- !u!114 &7942896102808546188
 MonoBehaviour:
@@ -10173,6 +10175,7 @@ GameObject:
   - component: {fileID: 7942896104362597978}
   - component: {fileID: 7942896104362597987}
   - component: {fileID: 7942896104362597979}
+  - component: {fileID: 1532702422}
   m_Layer: 0
   m_Name: BigGun
   m_TagString: Untagged
@@ -10533,3 +10536,42 @@ MonoBehaviour:
   _mask:
     serializedVersion: 2
     m_Bits: 1664
+--- !u!114 &1532702422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7942896104362597977}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54da59b21a2be9a43be934c7ac310ca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _weapon: {fileID: 7942896104362597985}
+  _range: 0.4
+  _duration: 0.1
+  _speedGrow:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0014038086
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1.0059357
+      value: 0.002746582
+      inSlope: -0.017812802
+      outSlope: -0.017812802
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.13490729
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

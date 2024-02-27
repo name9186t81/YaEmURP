@@ -40,15 +40,15 @@ public class WeaponRecoil : MonoBehaviour
 	{
 		if (!_active) return;
 
-		if (_elapsed > _returnTime / 2)
+		if (_elapsed > _returnTime / 2 * _weapon.ReloadMultiplier)
 		{
-			_velocity += _delta;
-			_linearVelocity += _linearDelta;
+			_velocity += _delta * _weapon.ReloadMultiplier;
+			_linearVelocity += _linearDelta * _weapon.ReloadMultiplier;
 		}
 		else
 		{
-			_velocity -= _delta;
-			_linearVelocity -= _linearDelta * 2;
+			_velocity -= _delta * _weapon.ReloadMultiplier;
+			_linearVelocity -= _linearDelta * 2 * _weapon.ReloadMultiplier;
 			if (_elapsed < 0)
 			{
 				_active = false;
@@ -58,6 +58,8 @@ public class WeaponRecoil : MonoBehaviour
 			}
 		}
 
+		_linearVelocity *= 0.95f;
+		_velocity *= 0.95f;
 		_elapsed -= Time.deltaTime;
 		transform.localPosition = _originalPosition + Vector2.up * _linearVelocity * Time.deltaTime;
 		transform.localEulerAngles = Vector3.forward * (_velocity + _originalAngle);
@@ -66,7 +68,7 @@ public class WeaponRecoil : MonoBehaviour
 	private void Recoil()
 	{
 		_delta = Random.Range(-_maxAngleVelocity, _maxAngleVelocity) / _returnTime;
-		_linearDelta = Random.Range(0f, -_maxLinearVelocity) / _returnTime;
+		_linearDelta = Random.Range(-_maxLinearVelocity / 2, -_maxLinearVelocity) / _returnTime;
 		_active = true;
 		_elapsed = _returnTime;
 	}

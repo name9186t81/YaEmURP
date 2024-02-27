@@ -76,7 +76,7 @@ namespace YaEm.Health
 
 			if ((args.DamageFlags & DamageFlags.Heal) != 0)
 			{
-				_currentHealth += args.Damage;
+				_currentHealth = Mathf.Min(_currentHealth + args.Damage, _maxHealth);
 			}
 			else
 			{

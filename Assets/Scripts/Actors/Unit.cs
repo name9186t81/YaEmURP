@@ -42,9 +42,8 @@ namespace YaEm
 			_cachedRigidbody = GetComponent<Rigidbody2D>();
 			_motor = new Motor(_speed, _rotationSpeed, this, transform, new RigidbodyVelocityProvider(_cachedRigidbody));
 			_health = new YaEm.Health.Health(_maxHealth, _maxHealth, this);
-			if (_builder != null) _ability = _builder.Build(this);
 
-			if(_destroyOnDeath)
+			if (_destroyOnDeath)
 				_health.OnDeath += (_) => Destroy(gameObject);
 
 			_health.OnDamage += (DamageArgs args) => OnDamage?.Invoke(args);
@@ -55,6 +54,7 @@ namespace YaEm
 				Debug.LogWarning($"Unit: {_name} does not have weapon");
 			}
 
+			if (_builder != null) _ability = _builder.Build(this);
 			var comps = transform.GetComponentsInChildren<IActorComponent>(true);
 			for (int i = 0, length = comps.Length; i < length; i++)
 			{

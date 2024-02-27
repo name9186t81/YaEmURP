@@ -59,7 +59,7 @@ namespace YaEm.Movement
 		private Vector2 Evaluate(Vector2 worldPos)
 		{
 			_elapsed += Time.deltaTime;
-			float delta = _elapsed.Delta(_duration);
+			float delta = _elapsed.Delta(_duration * _weapon.ReloadMultiplier);
 			if(delta > 1f)
 			{
 				_isPlaying = false;

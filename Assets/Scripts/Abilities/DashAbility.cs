@@ -17,6 +17,7 @@ namespace YaEm.Ability
 		private float _elapsed;
 		private float _elapsedCooldown;
 		private ForceState _state;
+		private float _readiness;
 
 		private readonly IAIAbilityInstruction _instruction;
 		private readonly AnimationCurve _growCurve;
@@ -89,7 +90,8 @@ namespace YaEm.Ability
 			if (!_cooling) return;
 
 			_elapsedCooldown += dt;
-			if(_elapsedCooldown > _cooldown)
+			_readiness = _elapsedCooldown / _cooldown;
+			if (_elapsedCooldown > _cooldown)
 			{
 				_cooling = false;
 				_elapsedCooldown = 0f;
@@ -109,5 +111,7 @@ namespace YaEm.Ability
 		}
 
 		public float Length => _distance;
+
+		public float Readiness => _readiness;
 	}
 }

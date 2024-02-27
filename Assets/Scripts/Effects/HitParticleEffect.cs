@@ -10,6 +10,7 @@ namespace YaEm.Effects
 	public sealed class HitParticleEffect : MonoBehaviour
 	{
 		[SerializeField] private ParticleSystem _hitEffectPrefab;
+		[SerializeField] private DamageFlags _excludedTags;
 		[SerializeField] private bool _applyTeamColor = true;
 		private Pool<ParticleSystem> _systemPool;
 		private IActor _owner;
@@ -36,6 +37,7 @@ namespace YaEm.Effects
 
 		private void Damaged(DamageArgs obj)
 		{
+			if ((obj.DamageFlags & _excludedTags) != 0) return;
 			var system = _systemPool.Get();
 			if (_applyTeamColor)
 			{

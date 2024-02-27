@@ -62,6 +62,10 @@ namespace YaEm.AI
 			}
 			_controlled.OnInit += Init;
 			_transform = (_controlled as MonoBehaviour).transform;
+			if (_seed == -1)
+				_mixed = AIProfile.Mix(_min, _max);
+			else
+				_mixed = AIProfile.Mix(_min, _max, _seed);
 		}
 
 		public void UpdateTarget(IActor newTarget, bool saveInMemory = true)
@@ -149,10 +153,6 @@ namespace YaEm.AI
 			}
 
 			_isInited = true;
-			if (_seed == -1)
-				_mixed = AIProfile.Mix(_min, _max);
-			else
-				_mixed = AIProfile.Mix(_min, _max, _seed);
 
 			GetComponent<AITargetPicker>().Init(this);
 

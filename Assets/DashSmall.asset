@@ -12,9 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5696aa535b905b4f8c80d4f8c854c1f, type: 3}
   m_Name: DashSmall
   m_EditorClassIdentifier: 
-  _dashLength: 4
-  _dashDuration: 0.5
+  _dashLength: 2
+  _dashDuration: 0.2
   _dashCooldown: 0.1
+  _lengthMax: 8
+  _durationMax: 0.8
+  _cooldownMax: 1
   _escapeTolerancy: 1
   _attackTolerancy: 1
   _moveTolerancy: 1

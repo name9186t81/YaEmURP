@@ -29,6 +29,7 @@ namespace YaEm.Effects
 	public enum EffectType
 	{
 		OnFire,
-		Invincible
+		Invincible,
+		Adrenaline
 	}
 }

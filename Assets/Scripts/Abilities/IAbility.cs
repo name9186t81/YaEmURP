@@ -16,6 +16,10 @@ namespace YaEm.Ability
 		/// </summary>
 		IAIAbilityInstruction AIAbilityInstruction { get; }
 
+		/// <summary>
+		/// Shows when ability is ready for use. 1 - ready, 0 - not.
+		/// </summary>
+		float Readiness { get; }
 		event Action OnActivate;
 		event Action OnDeactivate;
 	}

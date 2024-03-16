@@ -88,18 +88,13 @@ namespace YaEm.Movement
 
 		private void UpdateForces()
 		{
-			List<int> toRemove = new List<int>();
 			for(int i = 0; i < _forces.Count; i++)
 			{
 				if (_forces[i].State == ForceState.Destroyed)
 				{
-					toRemove.Add(i);
+					_forces.RemoveAt(i);
+					i--;
 				}
-			}
-
-			foreach (int force in toRemove)
-			{
-				_forces.RemoveAt(force);
 			}
 		}
 

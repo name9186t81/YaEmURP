@@ -98,25 +98,15 @@ namespace YaEm.Health
 
 		public void UpdateEffector(float delta)
 		{
-			//todo remove so much allocations
-			List<int> toDelete = new List<int>();
-			List<EffectType> typesToDelete = new List<EffectType>();
 			for (int i = 0, length = Effects.Count; i < length; ++i)
 			{
 				Effects[i].Update(delta);
-				Debug.Log(Effects[i].ToString() + " " + Effects[i].Type);
 				if (Effects[i].State == EffectState.Finished)
 				{
-					toDelete.Add(i);
-					typesToDelete.Add(Effects[i].Type);
-					Debug.Log("Removing");
+					_effects.RemoveAt(i);
+					_types.Remove(Effects[i].Type);
+					i--;
 				}
-			}
-
-			for (int i = 0, length = toDelete.Count; i < length; ++i)
-			{
-				_effects.RemoveAt(i);
-				_types.Remove(typesToDelete[i]);
 			}
 		}
 	}

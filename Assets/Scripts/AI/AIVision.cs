@@ -32,6 +32,7 @@ namespace YaEm.AI {
 		{
 			enabled = true;
 			_controller = controller;
+			_cachedScan = new List<IActor>();
 		}
 
 		private void Update()
@@ -69,9 +70,9 @@ namespace YaEm.AI {
 
 			int hits = Physics2D.OverlapCircleNonAlloc(_controller.Position, _range, _cachedHits, _scanMask);
 
-			IList<IActor> listed = ClearForActors(_cachedHits);
+			IList<IActor> listed = ClearForActors(_cachedHits, _cachedScan);
 			if (!_canSeeThroughWalls) listed = ClearForWalls(listed);
-			if (_angle < 360) listed = ClearForAngle(listed);
+			//if (_angle < 360) listed = ClearForAngle(listed);
 
 			_cachedScan = listed;
 			if (_controller.Actor is ITeamProvider prov)
@@ -110,9 +111,10 @@ namespace YaEm.AI {
 			return list;
 		}
 
-		private IList<IActor> ClearForActors(IList<Collider2D> hits)
+		private IList<IActor> ClearForActors(IList<Collider2D> hits, IList<IActor> cached)
 		{
-			IList<IActor> newList = new List<IActor>();
+			IList<IActor> newList = cached;
+			cached.Clear();
 
 			foreach (var col in hits)
 			{
@@ -128,16 +130,16 @@ namespace YaEm.AI {
 
 		private IList<IActor> ClearForWalls(IList<IActor> hits)
 		{
-			IList<IActor> newList = new List<IActor>();
-
-			foreach (var col in hits)
+			for(int i = 0, length = hits.Count; i < length;  ++i)
 			{
-				if (!Physics2D.Linecast(_controller.Position, col.Position, _wallsMask & ~_ignoredInVision))
+				var actor = hits[i];
+				if (Physics2D.Linecast(_controller.Position, actor.Position, _wallsMask & ~_ignoredInVision))
 				{
-					newList.Add(col);
+					hits.RemoveAt(i);
+					--i;
 				}
 			}
-			return newList;
+			return hits;
 		}
 
 

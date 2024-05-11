@@ -40,6 +40,8 @@ namespace YaEm.Weapons
 		public event Action<IActor> OnParry;
 		public event Action OnInit;
 
+		public bool MarkedForDestroy => _markedForDestroy;
+
 		public DamageArgs Args => _args;
 
 		public float Speed => _speed;
@@ -123,6 +125,9 @@ namespace YaEm.Weapons
 				OnTeamNumberChange?.Invoke(TeamNumber, prov.TeamNumber);
 				_teamNumber = prov.TeamNumber;
 			}
+
+			_owner = source;
+			_args = new DamageArgs(_owner, _args.Damage, _args.DamageFlags, _args.Weapon);
 			OnParry?.Invoke(source);
 		}
 

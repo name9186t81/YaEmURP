@@ -37,8 +37,7 @@ namespace YaEm.AI
 		{
 			if (_controller.IsTargetNull || _controller.CurrentTarget is not IProvider<IWeapon> weapon || !weapon.Value.CanAttack) return -100f;
 
-			return 100f;
-			//return _controller.Experience + _controller.Aggresivness * (Mathf.Clamp01(0.5f - _controller.Health.Delta()) * 2);
+			return _controller.Experience + _controller.Aggresivness * (Mathf.Clamp01(0.5f - _controller.Health.Delta()) * 2) + Mathf.Lerp(_controller.Vision.EnemiesInRangeCount, 0, _controller.Braveness) * 0.5f;
 		}
 
 		public void Init(AIController controller)

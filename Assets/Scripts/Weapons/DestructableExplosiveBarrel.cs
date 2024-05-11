@@ -16,6 +16,7 @@ namespace YaEm.Weapons
 		[SerializeField] private float _timeBeforeDestruction;
 		[SerializeField] private ParticleSystem _preDeathParticles; //todo move in another class
 		[SerializeField] private Explosion _explosion;
+		[SerializeField] private bool _invincibleOnDeath;
 		[SerializeField, Tooltip("The unit this barrel is attached to. Can be null.")] private Unit _unit;
 
 		public Vector2 Position => _transform.position;
@@ -32,23 +33,36 @@ namespace YaEm.Weapons
 
 		public int TeamNumber => _teamNumber;
 
+		public bool IsVisible => _isVisible;
+
 		public event Action OnFinalDestroy;
 		public event Action OnInit;
 		public event Action<IController, IController> OnControllerChange;
 		public event Action<int, int> OnTeamNumberChange;
 		public event Action<DamageArgs> OnDamage;
 		public event Action<ControllerAction> OnAction;
+		public event Action<DamageArgs> OnPreDamage;
 
 		private int _teamNumber;
 		private Transform _transform;
 		private IHealth _health;
 		private float _elapsed;
+		private bool _isVisible;
 		private bool _isDying;
 
 		private float _offsetLength;
 		private float _offsetAngle;
 		private int _killerTeamNumber;
 		private IActor _killer;
+
+		private void OnBecameInvisible()
+		{
+			_isVisible = false;
+		}
+		private void OnBecameVisible()
+		{
+			_isVisible = true;
+		}
 
 		private void Awake()
 		{
@@ -94,7 +108,7 @@ namespace YaEm.Weapons
 			_health.OnDeath -= Death;
 			_preDeathParticles?.Play();
 
-			if (_unit is IProvider<IHealth> prov2)
+			if (_unit is IProvider<IHealth> prov2 && _invincibleOnDeath)
 			{
 				prov2.Value.Flags |= HealthFlags.Invincible;
 			}

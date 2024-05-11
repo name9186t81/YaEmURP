@@ -47,7 +47,7 @@ namespace YaEm.Effects
 				else _displacementCamera = obj.GetComponent<Camera>();
 			}
 
-			if (_material == null) return;
+			if (_material == null || _displacementCamera == null) return;
 			_material.SetTexture("_Sample", _displacementCamera.targetTexture);
 			
 			using (new ProfilingScope(cmd, new ProfilingSampler(PASS_NAME)))

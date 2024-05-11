@@ -49,7 +49,8 @@ namespace YaEm.GUI
 			{
 				_elapsed += Time.deltaTime;
 
-				if (_elapsed < 2f) return;
+				if (_elapsed < 0.2f) return;
+				_elapsed = 0f;
 
 				IActor[] actors = FindObjectsOfType<Unit>();
 				foreach (var actor in actors)
@@ -66,7 +67,7 @@ namespace YaEm.GUI
 			{
 				OnPlayerChange?.Invoke(player);
 				_player = player as Unit;
-				_mobileController.Target = player as Unit;
+				if(_mobileController != null) _mobileController.Target = player as Unit;
 				_elapsed = 0f;
 				return true;
 			}

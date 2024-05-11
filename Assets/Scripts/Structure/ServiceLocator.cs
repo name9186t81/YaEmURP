@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
 
+using YaEm.Core;
+using YaEm.Dialogues;
+
 namespace YaEm
 {
 	public static class ServiceLocator
@@ -11,6 +14,9 @@ namespace YaEm
 		{
 			_services.Add(typeof(GlobalDeathNotificator), new GlobalDeathNotificator());
 			_services.Add(typeof(GlobalTimeModifier), new GlobalTimeModifier());
+			_services.Add(typeof(ColorTable), new ColorTable());
+			_services.Add(typeof(PlayerChararcterContainer), new PlayerChararcterContainer());
+			_services.Add(typeof(DialogueService), new DialogueService());
 		}
 
 		public static void Register<T>(T instance) where T : class, IService
@@ -43,6 +49,11 @@ namespace YaEm
 			bool res = _services.ContainsKey(typeof(T));
 			if (res) _services[typeof(T)] = val;
 			return res;
+		}
+
+		public static bool Remove<T>() where T : class, IService
+		{
+			return _services.Remove(typeof(T));
 		}
 	}
 }

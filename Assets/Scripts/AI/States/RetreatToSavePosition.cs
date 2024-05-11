@@ -36,7 +36,7 @@ namespace YaEm.AI.States
 			}
 
 			Vector2 dest = _path[_pathIndex];
-			if (dest.DistanceLess(_controller.Position, _controller.Actor.Scale))
+			if (dest.DistanceLess(_controller.Position, _controller.Actor.Scale * 2f))
 			{
 				_pathIndex++;
 			}
@@ -78,7 +78,7 @@ namespace YaEm.AI.States
 
 		public void PreExecute()
 		{
-			_path = _pathFinding.FIndPath(_controller.Position, _controller.LastSavePosition.Value);
+			_path = _pathFinding.FindPath(_controller.Position, _controller.LastSavePosition.Value);
 			_pathIndex = 0;
 			_isWalking = true;
 		}

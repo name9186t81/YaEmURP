@@ -4,6 +4,7 @@ using UnityEditor;
 
 using UnityEngine;
 
+#if UNITY_EDITOR
 namespace Global
 {
 	public sealed class Test : MonoBehaviour
@@ -19,7 +20,7 @@ namespace Global
 					float xDelta = (float)x / 512;
 					float yDelta = (float)y / 512;
 
-					tex.SetPixel(x, y, Color.HSVToRGB(xDelta, 1, yDelta));
+					tex.SetPixel(x, y, Color.HSVToRGB(xDelta, 1, 1));
 				}
 			}
 
@@ -29,9 +30,10 @@ namespace Global
 				Directory.CreateDirectory(Application.dataPath + "/RenderOutput");
 			}
 
-			File.WriteAllBytes(Application.dataPath + "/RenderOutput/HSVSquare.png", bytes);
-			Debug.Log(Application.dataPath + "/RenderOutput/HSVSquare.png");
+			File.WriteAllBytes(Application.dataPath + "/RenderOutput/HSVSquareBright.png", bytes);
+			Debug.Log(Application.dataPath + "/RenderOutput//HSVSquareBright.png");
 			AssetDatabase.Refresh();
 		}
 	}
 }
+#endif

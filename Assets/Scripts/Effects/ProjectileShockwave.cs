@@ -32,7 +32,7 @@ namespace YaEm.Effects
 			if (_adaptColors)
 			{
 				//todo: make it work with more complex gradient
-				var teamColor = ColorTable.GetColor(_projectile.TeamNumber);
+				var teamColor = ServiceLocator.Get<ColorTable>().GetColor(_projectile.TeamNumber);
 				var keys = new GradientColorKey[2];
 				keys[0].color = new Color(teamColor.r, teamColor.g, teamColor.b, _wave.Gradient.colorKeys[0].color.a);
 				keys[1].color = new Color(teamColor.r, teamColor.g, teamColor.b, _wave.Gradient.colorKeys[1].color.a);

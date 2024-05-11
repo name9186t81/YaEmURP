@@ -44,11 +44,11 @@ namespace YaEm.Weapons
 			float val = 1f;
 			if (_affectedBySlowMotion && ServiceLocator.TryGet<GlobalTimeModifier>(out var mod)) val *= mod.TimeModificator;
 
-			_elapsedDelay -= Time.deltaTime * val;
+			_elapsedDelay -= Time.deltaTime * val / _weapon.ReloadMultiplier;
 			_weapon.CanFire = !_blocked && _storedHeat < 1f;
 			if (_elapsedDelay > 0) return;
 
-			_storedHeat -= _decreaseDelta * Time.deltaTime;
+			_storedHeat -= _decreaseDelta * Time.deltaTime / _weapon.ReloadMultiplier;
 			bool wasBlocked = _blocked;
 			_blocked &= _storedHeat > 0;
 			if(wasBlocked && !_blocked)

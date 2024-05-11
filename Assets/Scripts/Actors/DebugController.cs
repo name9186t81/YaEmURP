@@ -37,11 +37,13 @@ public class DebugController : MonoBehaviour, IController
 		if (Input.GetKey(KeyCode.D)) moveDir += Vector2.right;
 
 		if (Input.GetKey(KeyCode.E) && ServiceLocator.TryGet<GlobalTimeModifier>(out var mod)) mod.SetTimeModificator(0.25f); 
-		if (Input.GetKey(KeyCode.R) && ServiceLocator.TryGet<GlobalTimeModifier>(out var mod2)) mod2.SetTimeModificator(1f); 
+		if (Input.GetKey(KeyCode.R) && ServiceLocator.TryGet<GlobalTimeModifier>(out var mod2)) mod2.SetTimeModificator(1f);
+		if (Input.GetKey(KeyCode.Z)) ControllerAction?.Invoke(YaEm.Core.ControllerAction.UseAbility);
 
 		if (Input.GetMouseButton(0)) ControllerAction?.Invoke(YaEm.Core.ControllerAction.Fire);
 		if (Input.GetMouseButtonDown(1)) ControllerAction?.Invoke(YaEm.Core.ControllerAction.Charge);
 		if (Input.GetMouseButtonUp(1)) ControllerAction?.Invoke(YaEm.Core.ControllerAction.BreakCharge);
+
 
 		_rotation = (transform.position.GetDirection(Camera.main.ScreenToWorldPoint(Input.mousePosition))).AngleFromVector() - 90;
 		_moveDir = moveDir;

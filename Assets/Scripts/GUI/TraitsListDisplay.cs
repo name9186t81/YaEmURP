@@ -11,9 +11,7 @@ namespace YaEm.GUI
 		[Serializable]
 		private struct Trait
 		{
-			public string Name;
-			public TraitType Type;
-			public GameObject DisplayPrefab;
+			public TraitBase Base;
 			public string Description;
 			public Sprite Icon;
 		}
@@ -29,11 +27,12 @@ namespace YaEm.GUI
 		[SerializeField] private VerticalLayoutGroup _layoutPrefab;
 		[SerializeField] private SelectableTraitDisplay _traitPrefab;
 		[SerializeField] private TraitType _type;
+		public event Action<TraitBase> OnTraitChanged;
 		private SelectableTraitDisplay _selected;
 		private SelectableTraitDisplay[] _displays;
 		private VerticalLayoutGroup _group;
 
-		private void Start()
+		private void Awake()
 		{
 			_group = Instantiate(_layoutPrefab, _holder);
 			_group.name += _type.ToString();
@@ -41,7 +40,7 @@ namespace YaEm.GUI
 			for(int i = 0; i < _traits.Length; i++)
 			{
 				_displays[i] = Instantiate(_traitPrefab, _group.transform);
-				_displays[i].UpdateDisplay(_traits[i].Icon, _traits[i].Description, _traits[i].Name, _traits[i].DisplayPrefab);
+				_displays[i].UpdateDisplay(_traits[i].Icon, _traits[i].Description, _traits[i].Base.Name);
 				_displays[i].UnSelect();
 				_displays[i].OnClick += SelectTrait;
 			}
@@ -49,12 +48,11 @@ namespace YaEm.GUI
 
 		public void SelectTrait(string name)
 		{
-			Debug.Log(name);
 			int hash = name.GetHashCode();
 			int ind = 0;
 			foreach(var trait in _traits)
 			{
-				if(hash == trait.Name.GetHashCode())
+				if(hash == trait.Base.Name.GetHashCode())
 				{
 					if(_selected != null)
 					{
@@ -62,11 +60,14 @@ namespace YaEm.GUI
 					}
 					_selected = _displays[ind];
 					_selected.Select();
+					OnTraitChanged?.Invoke(trait.Base);
+					return;
 				}
 				ind++;
 			}
 		}
 
+		public VerticalLayoutGroup Group => _group;
 		public TraitType Type => _type;
 	}
 }

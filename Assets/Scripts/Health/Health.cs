@@ -42,6 +42,7 @@ namespace YaEm.Health
 
 		public event Action<DamageArgs> OnDamage;
 		public event Action<DamageArgs> OnDeath;
+		public event Action<DamageArgs> OnPreDamage;
 
 		public bool AddEffect(IEffect<IHealth> effect)
 		{
@@ -74,6 +75,10 @@ namespace YaEm.Health
 
 			if ((Flags & HealthFlags.Invincible) != 0) return;
 
+			OnPreDamage?.Invoke(args);
+
+			if (args.Damage <= 0) return;
+
 			if ((args.DamageFlags & DamageFlags.Heal) != 0)
 			{
 				_currentHealth = Mathf.Min(_currentHealth + args.Damage, _maxHealth);
@@ -98,13 +103,13 @@ namespace YaEm.Health
 
 		public void UpdateEffector(float delta)
 		{
-			for (int i = 0, length = Effects.Count; i < length; ++i)
+			for (int i = 0; i < Effects.Count; ++i)
 			{
 				Effects[i].Update(delta);
 				if (Effects[i].State == EffectState.Finished)
 				{
-					_effects.RemoveAt(i);
 					_types.Remove(Effects[i].Type);
+					_effects.RemoveAt(i);
 					i--;
 				}
 			}

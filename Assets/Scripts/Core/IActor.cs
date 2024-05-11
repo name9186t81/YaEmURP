@@ -24,5 +24,6 @@ namespace YaEm.Core
 		/// </summary>
 		event Action<IController, IController> OnControllerChange;
 		bool TryChangeController(in IController controller);
+		bool IsVisible { get; }
 	}
 }

@@ -26,7 +26,9 @@
 				new LookAroundUtility(),
 				new WanderInMap(),
 				new ReportTargetsInSight(),
-				new PursueTargetFromMap()
+				new PursueTargetFromMap(),
+				new MimicExperienced(),
+				new StayNearMedic()
 			});
 		}
 

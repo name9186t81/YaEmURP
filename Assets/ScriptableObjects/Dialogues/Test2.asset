@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 915913bc18718264ab2fa329fd3d8151, type: 3}
+  m_Name: Test2
+  m_EditorClassIdentifier: 
+  _mainText: What<veryslow>...</veryslow> <fast><cshake><shake><color="red">W</cshake>hat
+    did you just say?</fast></color></shake>
+  _options: []
+  _autoSwitch: 1
+  _nextDialogue: {fileID: 0}
+  _stayTime: 1

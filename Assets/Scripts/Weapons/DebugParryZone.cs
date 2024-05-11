@@ -31,6 +31,9 @@ public class DebugParryZone : MonoBehaviour, IActor, ITeamProvider
 	public string Name => throw new NotImplementedException();
 
 	public int TeamNumber => _teamNumber;
+
+	public bool IsVisible => throw new NotImplementedException();
+
 	private Collider2D[] _colliders = new Collider2D[32];
 	private void Update()
 	{

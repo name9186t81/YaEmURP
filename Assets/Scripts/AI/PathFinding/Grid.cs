@@ -36,7 +36,7 @@ public class Grid : MonoBehaviour
 
 		foreach(Node n in _grid)
 		{
-			n.Neighbours = GetNeighbours(n);
+			n.SetNeighbours(GetNeighbours(n));
 		}
 	}
 
@@ -104,7 +104,7 @@ public class Grid : MonoBehaviour
 				Gizmos.DrawCube(n.WorldPosition, Vector3.one * (_cellDiameter - .1f));
 				continue;
 			}
-			Gizmos.color = n.Walkable ? Color.green : Color.red;
+			Gizmos.color = n.Walkable ? Color.Lerp(Color.green, Color.red, n.WallFactor) : Color.red;
 			Gizmos.DrawCube(n.WorldPosition, Vector3.one * (_cellDiameter -.1f));
 		}
 	}
@@ -119,9 +119,10 @@ public sealed class Node
 	public Node[] Neighbours;
 	public Node Previous;
 
+	public float WallFactor;
 	public int HCost;
 	public int GCost;
-	public int FCost => HCost + GCost;
+	public int FCost => (HCost + GCost) + (int)((HCost + GCost) * WallFactor);
 
 	public Node(bool walkable, Vector2 worldPos, int x, int y)
 	{
@@ -129,5 +130,20 @@ public sealed class Node
 		WorldPosition = worldPos;
 		XPos = x;
 		YPos = y;
+	}
+
+	public void SetNeighbours(Node[] neighbours)
+	{
+		int total = neighbours.Length;
+		int unWalkable = 0;
+		for(int i = 0; i < total; i++)
+		{
+			if (neighbours[i].Walkable) continue;
+
+			unWalkable++;
+		}
+
+		Neighbours = neighbours;
+		WallFactor = (float)unWalkable / total;
 	}
 }

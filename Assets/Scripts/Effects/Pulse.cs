@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class Pulse : MonoBehaviour
+public sealed class Pulse : MonoBehaviour
 {
 	[SerializeField] private float _growTime;
 	[SerializeField] private float _maxScale;
+	[SerializeField] private float _minScale;
 	[SerializeField] private float _chillTime;
 	[SerializeField] private SpriteRenderer _renderer;
 	[SerializeField] private AnimationCurve _alphaFalloff;
@@ -30,7 +31,7 @@ public class Pulse : MonoBehaviour
 				DeActivate();
 			}
 
-			_cached.localScale = Vector3.one * delta * _maxScale;
+			_cached.localScale = Vector3.one * Mathf.Lerp(_minScale, _maxScale, delta);
 			if(_renderer != null)
 			{
 				var color = _renderer.color;
@@ -39,8 +40,8 @@ public class Pulse : MonoBehaviour
 		}
 		else
 		{
-			float delta = _elapsed / _chillTime;
-			_cached.localScale = Vector3.zero + Vector3.forward;	
+			float delta = _elapsed / _chillTime; 
+			_cached.localScale = Vector3.one * Mathf.Lerp(_maxScale, _minScale, delta);
 			if (delta > 1)
 			{
 				_active = true;

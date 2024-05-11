@@ -31,6 +31,7 @@ namespace YaEm.AI
 		[SerializeField] private float _maxTargetRemembranceTime;
 		[SerializeField] private bool _debug;
 
+		private bool _enabled = true;
 		private Vector2? _lastSavePosition;
 		private Transform _transform;
 		private AIProfile _mixed;
@@ -92,7 +93,7 @@ namespace YaEm.AI
 		{
 			Vector2 dir = Position.GetDirectionNormalized(point);
 			Vector2 resultDir = Vector2.zero;
-			Debug.DrawLine(Position, Position + dir * 2f, Color.red);
+			//Debug.DrawLine(Position, Position + dir * 2f, Color.red);
 
 			for (int i = 0; i < 8; i++)
 			{
@@ -103,8 +104,8 @@ namespace YaEm.AI
 					continue;
 				}
 
-				Debug.DrawLine(Position, Position + currentDir * 1.5f * dot, Color.yellow);
-				float size = _controlled.Scale + 0.1f;
+				//Debug.DrawLine(Position, Position + currentDir * 1.5f * dot, Color.yellow);
+				float size = _controlled.Scale * 1.2f;
 				var ray = PhysicsUtils.RaycastIgnoreSelf(_transform, Position, currentDir, size, _avoidMask);
 				if (ray)
 				{
@@ -118,7 +119,17 @@ namespace YaEm.AI
 			resultDir = resultDir.normalized;
 			_direction += resultDir / _accelarationTime * Time.deltaTime;
 			float mag = _direction.magnitude;
-			if (mag > 1f) _direction.Normalize();
+			if (mag > 1f) _direction /= mag;
+		}
+
+		public void Enable()
+		{
+			_enabled = true;
+		}
+
+		public void Disable()
+		{
+			_enabled = false;
 		}
 
 		public void ForgotTarget(bool saveInMemory)
@@ -201,10 +212,13 @@ namespace YaEm.AI
 
 		private void Update()
 		{
-			_utilityAI.Update();
-			if (_lastSavePosition.HasValue)
+			if (_enabled)
 			{
-				Debug.DrawLine(Position, _lastSavePosition.Value);
+				_utilityAI.Update();
+				if (_lastSavePosition.HasValue)
+				{
+					Debug.DrawLine(Position, _lastSavePosition.Value);
+				}
 			}
 			//Debug.Log(_utilityAI.CurrentUtility.GetType().ToString());
 		}

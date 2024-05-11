@@ -1,7 +1,7 @@
 ﻿using YaEm.Core;
-using YaEm;
 
 using UnityEngine;
+using YaEm.Ability;
 
 namespace YaEm.AI.States
 {
@@ -13,6 +13,8 @@ namespace YaEm.AI.States
 		private float _pickRadius;
 		private bool _succesful;
 		private float _elapsedTime;
+		private IDirectionalAbility _ability;
+		private float _cooldown;
 		private Vector2 _point;
 		public StateType StateType => StateType.Attacking;
 
@@ -35,7 +37,7 @@ namespace YaEm.AI.States
 			_controller.SafeWalk(_point);
 			_controller.InitCommand(ControllerAction.Fire);
 
-			if (_controller.Position.DistanceLess(_point, _controller.Actor.Scale))
+			if (_controller.Position.DistanceLess(_point, _controller.Actor.Scale * 2f))
 			{
 				_succesful = false;
 				_elapsedTime = MIN_DELAY;
@@ -48,10 +50,25 @@ namespace YaEm.AI.States
 				_elapsedTime = MIN_DELAY;
 				return;
 			}
+
+			if (_ability != null)
+			{
+				if (_cooldown < 0 && _ability.CanUse())
+				{
+					_cooldown = AbilityExtensions.AI_MOVEMENT_USE_DELAY;
+
+					if (UnityEngine.Random.value < _controller.Experience)
+					{
+						_ability.Direction = _controller.Position.GetDirectionNormalized(_point);
+						_ability.Use();
+					}
+				}
+			}
 		}
 
 		public float GetEffectivness()
 		{
+			_cooldown -= Time.deltaTime;
 			_elapsedTime -= Time.deltaTime;
 			return _controller.IsTargetNull ? -100f : Mathf.Abs(Mathf.Min(_elapsedTime, 0)) * _controller.Braveness;
 		}
@@ -60,6 +77,11 @@ namespace YaEm.AI.States
 		{
 			_controller = controller;
 			_pickRadius = _controller.Weapon != null ? _controller.Weapon.UseRange : 0.1f;
+
+			if (_controller.Actor is IProvider<IAbility> prov && AbilityExtensions.IsMovementAbility(prov.Value))
+			{
+				_ability = (IDirectionalAbility)prov.Value;
+			}
 		}
 
 		public void PreExecute()
@@ -78,10 +100,10 @@ namespace YaEm.AI.States
 				{
 					_succesful = true;
 					_point = randomPoint;
-					Debug.DrawLine(randomPoint, targetPos, Color.green, 2f);
+					Debug.DrawLine(randomPoint, targetPos, UnityEngine.Color.green, 2f);
 					return;
 				}
-				Debug.DrawLine(randomPoint, targetPos, Color.red, 2f);
+				Debug.DrawLine(randomPoint, targetPos, UnityEngine.Color.red, 2f);
 			}
 			_elapsedTime = MIN_DELAY;
 			_succesful = false;

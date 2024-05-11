@@ -41,7 +41,7 @@ namespace YaEm.Effects
 			var system = _systemPool.Get();
 			if (_applyTeamColor)
 			{
-				system.startColor = ColorTable.GetColor(_owner == null || !(_owner is ITeamProvider prov) ? 0 : prov.TeamNumber);
+				system.startColor = ServiceLocator.Get<ColorTable>().GetColor(_owner == null || !(_owner is ITeamProvider prov) ? 0 : prov.TeamNumber);
 			}
 			system.Play();
 			system.transform.position = obj.HitPosition;

@@ -22,7 +22,15 @@ namespace YaEm.Effects
 			if(_actor is IProvider<IHealth> prov)
 			{
 				prov.Value.OnDamage += Damaged;
+				prov.Value.OnDeath += Death;
 			}
+		}
+
+		private void Death(DamageArgs obj)
+		{
+			var health = (_actor as IProvider<IHealth>);
+			health.Value.OnDeath -= Death;
+			health.Value.OnDamage -= Damaged;
 		}
 
 		private void Update()

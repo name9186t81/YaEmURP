@@ -23,6 +23,14 @@ namespace YaEm.GUI
 			Init();
 		}
 
+
+		private void OnDisable()
+		{
+			if(_service != null)
+				_service.OnPlayerChange -= PlayerChanged;
+		}
+
+		protected bool IsPlayerNull => ((Object)_service.Player) == null;
 		protected virtual void Init() { }
 		protected virtual void PlayerChanged(IActor player) { }
 		protected IActor Player => _service.Player;

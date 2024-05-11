@@ -1,6 +1,4 @@
-﻿using YaEm;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace YaEm.AI.States
 {
@@ -31,7 +29,7 @@ namespace YaEm.AI.States
 			_controller.SafeWalk(_point);
 			_controller.LookAtPoint(_point);
 
-			if (_controller.Position.DistanceLess(_point, _controller.Actor.Scale))
+			if (_controller.Position.DistanceLess(_point, _controller.Actor.Scale * 2f))
 			{
 				_isWalking = false;
 				_elapsedCooldown = _walkCooldown;

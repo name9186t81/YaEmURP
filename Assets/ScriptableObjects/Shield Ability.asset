@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12b90630c19c4d48b572e97208d8667, type: 3}
+  m_Name: Shield Ability
+  m_EditorClassIdentifier: 
+  _shieldHealth: 400
+  _shieldRegenerationTime: 10
+  _damageCooldown: 1
+  _deathCooldown: 5
+  _regenerationTick: 0.5
+  _canPassivlyRegenerate: 1

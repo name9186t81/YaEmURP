@@ -14,6 +14,7 @@ namespace YaEm.Ability
 		[SerializeField] private float _lengthMax;
 		[SerializeField] private float _durationMax;
 		[SerializeField] private float _cooldownMax;
+		[SerializeField] private bool _invincibleOnUse;
 		[SerializeField, Range(0, 1f)] private float _escapeTolerancy = 1f;
 		[SerializeField, Range(0, 1f)] private float _attackTolerancy = 1f;
 		[SerializeField, Range(0, 1f)] private float _moveTolerancy = 1f;
@@ -42,7 +43,7 @@ namespace YaEm.Ability
 				new DashSubState(new IAIAbilityInstruction[]
 				{
 					new EscapeDash()
-				}));
+				}), _invincibleOnUse);
 			ability.Init(owner);
 			return ability;
 		}

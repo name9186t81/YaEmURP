@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 915913bc18718264ab2fa329fd3d8151, type: 3}
+  m_Name: Test
+  m_EditorClassIdentifier: 
+  _mainText: Oh<pause>,</pause> hello there!
+  _options:
+  - {fileID: 11400000, guid: b13c46ff68f9b6d409ac72e7fef5bb0d, type: 2}
+  - {fileID: 11400000, guid: 9b1034712107cea48a00871df1ed1a9e, type: 2}
+  _autoSwitch: 0
+  _nextDialogue: {fileID: 0}
+  _stayTime: 0

@@ -28,7 +28,7 @@ public class FlameTeamColorAdapter : MonoBehaviour, IActorComponent
 
 	public void ChangeColors(int team)
 	{
-		Color col = ColorTable.GetColor(team);
+		Color col = ServiceLocator.Get<ColorTable>().GetColor(team);
 		Color.RGBToHSV(col, out float offset, out _, out _);
 
 		var val = _particleSystem.colorOverLifetime;

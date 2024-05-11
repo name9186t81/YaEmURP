@@ -32,19 +32,19 @@ namespace HP.AI
 				if (!rn.Walkable) continue;
 
 				end = rn.WorldPosition;
-				return FIndPath(start, rn.WorldPosition);
+				return FindPath(start, rn.WorldPosition);
 			}
 
 			end = Vector2.zero;
 			return null;
 		}
 
-		public IReadOnlyList<Vector2> FIndPath(Vector2 start, Vector2 end)
+		public IReadOnlyList<Vector2> FindPath(Vector2 start, Vector2 end)
 		{
 			Node st = _grid.NodeFromWorldPoint(start);
 			Node en = _grid.NodeFromWorldPoint(end);
 
-			const int LIMIT_CELL_PER_CALL = 35;
+			const int LIMIT_CELL_PER_CALL = 80;
 			int cells = 0;
 
 			List<Node> open = new List<Node>();

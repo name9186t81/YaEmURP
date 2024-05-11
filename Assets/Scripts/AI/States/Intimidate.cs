@@ -59,7 +59,6 @@ namespace YaEm.AI.States
 
 			if(_slowdownAmount != 0 && _controller.TargetTransform != null && _controller.CurrentTarget is IProvider<Motor> prov)
 			{
-				Debug.Log("Rawr");
 				var force = ForceFactory.GetParameterizedForce();
 				force[ParameterizedForceKey.Motor] = prov.Value;
 				force[ParameterizedForceKey.ElapsedTime] = force[ParameterizedForceKey.MaxTime] = _intimidatingTime * 2f;

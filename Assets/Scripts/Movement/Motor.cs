@@ -7,7 +7,7 @@ namespace YaEm.Movement
 {
 	public sealed class Motor
 	{
-		private readonly List<IForce> _forces = new List<IForce>(1);
+		private readonly List<IForce> _forces = new List<IForce>();
 		private readonly float _speed;
 		private readonly float _rotationSpeed;
 		private readonly IActor _actor;
@@ -21,6 +21,7 @@ namespace YaEm.Movement
 		private float _rotationVelocity;
 		public event Action<float> _updateFunc;
 
+		private List<int> _check = new List<int>();
 		public Motor(float speed, float rotationSpeed, IActor controller, Transform transform, ITransformProvider provider)
 		{
 			_speed = speed;
@@ -51,7 +52,7 @@ namespace YaEm.Movement
 				_timeModificator.OnTimeModificated += TimeModded;
 			}
 
-			_movementForce = new BaseForce((_) => _controller.DesiredMoveDirection * _speed * _timeMod);
+			_movementForce = new BaseForce((_) => _controller.DesiredMoveDirection * _speed);
 		}
 
 		~Motor()
@@ -62,6 +63,7 @@ namespace YaEm.Movement
 		private void TimeModded()
 		{
 			_timeMod = _controller == null || _controller.IsEffectedBySlowMotion ? _timeModificator.TimeModificator : 1f;
+			Debug.Log(_timeModificator.TimeModificator + " " + _timeMod);
 		}
 
 		public void AddRotationVelocity(float velocity)
@@ -74,7 +76,7 @@ namespace YaEm.Movement
 			if (_actor == null) return;
 			UpdateForces();
 			Vector2 velocity = SummarizeForces();
-			_lastVelocity = velocity + _movementForce.ForceFunc(_actor.Position) * _timeMod;
+			_lastVelocity = velocity + _movementForce.ForceFunc(_actor.Position);
 			_rotationVelocity *= 0.8f;
 
 			_provider.Velocity = velocity;
@@ -83,7 +85,7 @@ namespace YaEm.Movement
 
 			_transform.rotation = Quaternion.Lerp(_transform.rotation, Quaternion.Euler(0, 0, _actor.DesiredRotation + _rotationVelocity), _rotationSpeed * deltaTime * _timeMod);
 
-			_provider.Velocity = velocity + _movementForce.ForceFunc(_actor.Position);
+			_provider.Velocity = (velocity + _movementForce.ForceFunc(_actor.Position)) * _timeMod;
 		}
 
 		private void UpdateForces()

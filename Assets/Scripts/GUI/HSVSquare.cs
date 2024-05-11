@@ -38,7 +38,7 @@ namespace YaEm.GUI
 		private void UpdateColor()
 		{
 			Vector2 delta = _cursorDisplay.localPosition / _selfRect.sizeDelta + Vector2.one * 0.5f;
-			_color = Color.HSVToRGB(Mathf.Clamp01(delta.x), 1, Mathf.Clamp01(delta.y));
+			_color = Color.HSVToRGB(Mathf.Clamp(delta.x, 0.01f, 0.99f), 1, Mathf.Clamp(delta.y, 0.01f, 0.99f));
 			ColorChanged?.Invoke(_color);
 		}
 

@@ -14,6 +14,7 @@ namespace YaEm.AI {
 		[SerializeField] private LayerMask _scanMask;
 		[SerializeField] private LayerMask _wallsMask;
 		[SerializeField] private LayerMask _ignoredInVision;
+		[SerializeField] private int _maxActorsInSight = 32;
 		[SerializeField] private bool _debug;
 		[SerializeField] private bool _canSeeThroughWalls;
 		private float _delay;
@@ -114,15 +115,18 @@ namespace YaEm.AI {
 		private IList<IActor> ClearForActors(IList<Collider2D> hits, IList<IActor> cached)
 		{
 			IList<IActor> newList = cached;
+			int c = 0;
 			cached.Clear();
 
 			foreach (var col in hits)
 			{
 				if (col == null) break;
+				if (c >= _maxActorsInSight) break;
 
 				if (col.transform.TryGetComponent<IActor>(out var act) && act.ToString() != "null")
 				{
 					newList.Add(act);
+					c++;
 				}
 			}
 			return newList;
@@ -130,7 +134,7 @@ namespace YaEm.AI {
 
 		private IList<IActor> ClearForWalls(IList<IActor> hits)
 		{
-			for(int i = 0, length = hits.Count; i < length;  ++i)
+			for(int i = 0; i < hits.Count; ++i)
 			{
 				var actor = hits[i];
 				if (Physics2D.Linecast(_controller.Position, actor.Position, _wallsMask & ~_ignoredInVision))

@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60fe2313e7065054b89f64685066506e, type: 3}
+  m_Name: AKTrait
+  m_EditorClassIdentifier: 
+  _name: AKWeapon
+  _type: 1
+  _weapon: {fileID: 8423219737688453869, guid: 824ad8843e9c84443b31a40e48cf28e6, type: 3}

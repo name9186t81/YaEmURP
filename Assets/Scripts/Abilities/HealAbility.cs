@@ -1,5 +1,3 @@
-using Mono.Cecil.Cil;
-
 using System;
 
 using UnityEngine;
@@ -91,6 +89,13 @@ namespace YaEm.Ability
 			{
 				_weapon = prov3.Value;
 			}
+
+			actor.OnAction += ReadAction;
+		}
+
+		private void ReadAction(ControllerAction obj)
+		{
+			if (obj == ControllerAction.UseAbility) Use();
 		}
 
 		public void Update(float dt)
@@ -108,7 +113,7 @@ namespace YaEm.Ability
 				{
 					_weapon.ReloadMultiplier += _weaponSpeedIncrease;
 				}
-				Debug.Log("Done");
+
 				_isInCooldown = true;
 				OnDeactivate?.Invoke();
 			}
@@ -142,7 +147,6 @@ namespace YaEm.Ability
 				_motor.AddForce(this);
 			}
 
-			Debug.Log("Used");
 			OnActivate?.Invoke();
 			_used = true;
 		}

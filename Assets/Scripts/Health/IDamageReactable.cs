@@ -1,5 +1,4 @@
-﻿using YaEm;
-using System;
+﻿using System;
 
 namespace YaEm.Health
 {
@@ -7,6 +6,7 @@ namespace YaEm.Health
 	{
 		bool CanTakeDamage(DamageArgs args);
 		void TakeDamage(DamageArgs args);
+		event Action<DamageArgs> OnPreDamage;
 		event Action<DamageArgs> OnDamage;
 	}
 }

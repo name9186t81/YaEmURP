@@ -61,7 +61,6 @@ namespace YaEm.AI.States
 
 		public void Undo()
 		{
-
 		}
 	}
 }

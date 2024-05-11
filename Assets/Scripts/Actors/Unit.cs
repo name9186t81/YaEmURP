@@ -28,6 +28,9 @@ namespace YaEm
 		[SerializeField] private bool _destroyOnDeath = true;
 		[SerializeField] private bool _debug;
 
+		private bool _isVisible;
+		private bool _isInited = false;
+		private bool _isComponentsInited = false;
 		private IAbility _ability;
 		private Transform _cached;
 		private Rigidbody2D _cachedRigidbody;
@@ -36,9 +39,52 @@ namespace YaEm
 		private Motor _motor;
 		private IController _controller;
 
-		private void Start()
+		private void Awake()
 		{
 			_cached = transform;
+		}
+
+		private void OnBecameInvisible()
+		{
+			_isVisible = false;
+		}
+
+		private void OnBecameVisible()
+		{
+			_isVisible = true;
+		}
+
+		private void Start()
+		{
+			Init();
+
+			if (_builder != null) _ability = _builder.Build(this);
+			InitComponents();
+
+			OnInit?.Invoke();
+		}
+
+		public void InitComponents()
+		{
+			if (_isComponentsInited) return;
+			_isComponentsInited = true;
+
+			var comps = transform.GetComponentsInChildren<IActorComponent>(true);
+			for (int i = 0, length = comps.Length; i < length; i++)
+			{
+				comps[i].Init(this);
+			}
+
+			if (TryGetComponent<IActorComponent>(out var selfComp))
+			{
+				selfComp.Init(this);
+			}
+		}
+
+		public void Init()
+		{
+			if (_isInited) return;
+			_isInited = true;
 			_cachedRigidbody = GetComponent<Rigidbody2D>();
 			_motor = new Motor(_speed, _rotationSpeed, this, transform, new RigidbodyVelocityProvider(_cachedRigidbody));
 			_health = new YaEm.Health.Health(_maxHealth, _maxHealth, this);
@@ -47,6 +93,7 @@ namespace YaEm
 				_health.OnDeath += (_) => Destroy(gameObject);
 
 			_health.OnDamage += (DamageArgs args) => OnDamage?.Invoke(args);
+			_health.OnPreDamage += (DamageArgs args) => OnPreDamage?.Invoke(args);
 			_health.Actor = this;
 
 			if (!transform.TryGetComponentInChildren<IWeapon>(out _weapon))
@@ -54,18 +101,17 @@ namespace YaEm
 				Debug.LogWarning($"Unit: {_name} does not have weapon");
 			}
 
-			if (_builder != null) _ability = _builder.Build(this);
-			var comps = transform.GetComponentsInChildren<IActorComponent>(true);
-			for (int i = 0, length = comps.Length; i < length; i++)
-			{
-				comps[i].Init(this);
-			}
+		}
 
-			if(TryGetComponent<IActorComponent>(out var selfComp))
-			{
-				selfComp.Init(this);
-			}
-			OnInit?.Invoke();
+		//todo make unit builder to not break SOLID
+		public void SetAbility(IAbility ability)
+		{
+			_ability = ability;
+		}
+
+		public void SetScale(float scale)
+		{
+			_scale = scale;
 		}
 
 		private void Update()
@@ -97,21 +143,42 @@ namespace YaEm
 
 		ref Ability.IAbility IProvider<Ability.IAbility>.Value => ref _ability;
 
+		public bool IsVisible => _isVisible;
+
 		public event Action<IController, IController> OnControllerChange;
 		public event Action<int, int> OnTeamNumberChange;
 		public event Action<DamageArgs> OnDamage;
 		public event Action OnInit;
 		public event Action<ControllerAction> OnAction;
+		public event Action<DamageArgs> OnPreDamage;
 
 		public bool TryChangeController(in IController controller)
 		{
 			bool res = CanChangeController(in controller);
 			if (res)
 			{
+				if(_controller != null)
+				{
+					_controller.ControllerAction -= ReadAction;
+				}
+				if(controller != null)
+				{
+					controller.ControllerAction += ReadAction;
+				}
 				OnControllerChange?.Invoke(Controller, controller);
 				_controller = controller;
 			}
 			return res;
+		}
+
+		private void ReadAction(ControllerAction obj)
+		{
+			if (obj == ControllerAction.UseAbility && _ability != null && _ability is IDirectionalAbility dir)
+			{
+				dir.Direction = _motor.MoveDirection;
+			}
+
+			OnAction?.Invoke(obj);
 		}
 
 		private enum ControllerType

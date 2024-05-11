@@ -5,12 +5,13 @@ namespace YaEm.Effects
 	public class Invincible : IEffect<IHealth>
 	{
 		private IHealth _health;
-		private float _duration;
+		private readonly float _duration;
+		private float _elapsed;
 		private EffectState _selfState;
 
 		public Invincible(float duration)
 		{
-			_duration = duration;
+			_elapsed = _duration = duration;
 		}
 
 		public EffectState State => _selfState;
@@ -22,6 +23,7 @@ namespace YaEm.Effects
 			_health = obj;
 			obj.Flags |= HealthFlags.Invincible;
 			_selfState = EffectState.Running;
+			_elapsed = _duration;
 		}
 
 		public bool CanApply(in IHealth obj)
@@ -31,13 +33,19 @@ namespace YaEm.Effects
 
 		public void Update(float deltaTime)
 		{
-			_duration -= deltaTime;
+			_elapsed -= deltaTime;
 
-			if (_duration < 0)
+			if (_elapsed < 0)
 			{
 				_selfState = EffectState.Finished;
-				//_health.Flags &= _health.Flags & !HealthFlags.Invincible;
+				_health.Flags &= ~HealthFlags.Invincible;
 			}
+		}
+
+		public void Break()
+		{
+			_selfState = EffectState.Finished;
+			_health.Flags &= ~HealthFlags.Invincible;
 		}
 	}
 }

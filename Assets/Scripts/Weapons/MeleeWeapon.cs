@@ -38,6 +38,7 @@ namespace YaEm.Weapons
 		public event Action OnAttack;
 		public event Action OnInit;
 		public event Action OnAttackEnded;
+		public event Action<DamageArgs> OnPreDamage;
 
 		public IActor Actor
 		{

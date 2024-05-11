@@ -3,21 +3,26 @@ using System;
 using UnityEngine;
 
 using YaEm.Core;
+using YaEm.Effects;
+using YaEm.Health;
 using YaEm.Movement;
 
 namespace YaEm.Ability
 {
 	public sealed class DashAbility : IDirectionalAbility, IForce
 	{
+		private Invincible _invincible;	
+		private IHealth _health;
 		private Motor _motor;
 		private Vector2 _direction;
 		private Vector2 _factor;
 		private bool _isActive;
 		private bool _cooling;
+		private bool _invincibleOnActivate;
 		private float _elapsed;
 		private float _elapsedCooldown;
 		private ForceState _state;
-		private float _readiness;
+		private float _readiness = 1f;
 
 		private readonly IAIAbilityInstruction _instruction;
 		private readonly AnimationCurve _growCurve;
@@ -26,7 +31,7 @@ namespace YaEm.Ability
 		private readonly float _cooldown;
 		private readonly float _area;
 
-		public DashAbility(AnimationCurve growCurve, float distance, float duration, float cooldown, IAIAbilityInstruction instruction)
+		public DashAbility(AnimationCurve growCurve, float distance, float duration, float cooldown, IAIAbilityInstruction instruction, bool invincibleOnActivate)
 		{
 			_growCurve = growCurve;
 			_distance = distance;
@@ -34,6 +39,7 @@ namespace YaEm.Ability
 			_area = growCurve.Area();
 			_instruction = instruction;
 			_cooldown = cooldown;
+			_invincibleOnActivate = invincibleOnActivate;
 		}
 
 		public Vector2 Direction { set => _direction = value; }
@@ -73,7 +79,7 @@ namespace YaEm.Ability
 
 		public void Init(IActor actor)
 		{
-			if(actor is IProvider<Motor> prov)
+			if (actor is IProvider<Motor> prov)
 			{
 				_motor = prov.Value;
 			}
@@ -82,12 +88,31 @@ namespace YaEm.Ability
 				Debug.LogWarning("Actor " + actor.Name + " is not movable");
 			}
 
+			if(actor is IProvider<IHealth> prov2 && _invincibleOnActivate)
+			{
+				_health = prov2.Value;
+
+				EffectBuilder<IHealth> builder = new EffectBuilder<IHealth>().SetDuration(_duration);
+				_invincible = (Invincible)builder.Build(EffectType.Invincible);
+			}
+
+			actor.OnAction += ReadAction;
 			_instruction.SetAbility(this);
+		}
+
+		private void ReadAction(ControllerAction obj)
+		{
+			if (obj == ControllerAction.UseAbility || obj == ControllerAction.Dash) Use();
 		}
 
 		public void Update(float dt)
 		{
 			if (!_cooling) return;
+
+			if (_invincibleOnActivate)
+			{
+				_invincible.Update(dt);
+			}
 
 			_elapsedCooldown += dt;
 			_readiness = _elapsedCooldown / _cooldown;
@@ -95,6 +120,11 @@ namespace YaEm.Ability
 			{
 				_cooling = false;
 				_elapsedCooldown = 0f;
+
+				if(_invincibleOnActivate && _health != null)
+				{
+					_invincible.Break();
+				}
 			}
 		}
 
@@ -102,11 +132,16 @@ namespace YaEm.Ability
 		{
 			if (!CanUse()) return;
 
+			if (_invincibleOnActivate && _health != null)
+			{
+				_invincible.ApplyEffect(_health);
+			}
+
 			_isActive = true;
 			_factor = _direction * _distance / (_area * _duration);
 			_state = ForceState.Alive;
 			_elapsed = 0f;
-			_motor?.AddForce(this);
+			_motor.AddForce(this);
 			OnActivate?.Invoke();
 		}
 

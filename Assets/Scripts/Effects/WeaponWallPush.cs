@@ -30,14 +30,16 @@ namespace YaEm.Effects
 
 		private void Update()
 		{
+			if(!_weapon.Actor.IsVisible) return;
+
 			var ray = Physics2D.Raycast(RayPos, _transform.up, _length, _mask);
 			if (ray)
 			{
 				float dist = (_length - ray.distance);
-				_transform.position -= transform.up * dist;
+				_transform.position = RayPos - (Vector2)transform.up * dist;
 				_isDirty = true;
 			}
-			else if(_isDirty)
+			else if (_isDirty)
 			{
 				_transform.localPosition = _startOffset * (_startAngle).VectorFromAngle();
 				_isDirty = false;
@@ -54,6 +56,6 @@ namespace YaEm.Effects
 			Gizmos.DrawLine(start + _offset, (Vector2)_transform.up * _length + start + _offset);
 		}
 #endif
-		private Vector2 RayPos => (Vector2)_transform.position + _offset.Rotate(_weapon.Actor.Rotation);
+		private Vector2 RayPos => _weapon.Actor.Position + (_startAngle + _weapon.Actor.Rotation).VectorFromAngle() * _startOffset;
 	}
 }

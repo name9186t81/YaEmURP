@@ -20,6 +20,7 @@ public class GlobalTimeModifier : IService
 	public void Reset()
 	{
 		_timeModifier = 1f;
+		OnTimeModificated?.Invoke();
 	}
 
 	public float TimeModificator => _timeModifier;

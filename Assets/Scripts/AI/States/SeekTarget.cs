@@ -23,7 +23,7 @@ public class SeekTarget : IUtility
 		_controller.Memory.TryGetValue(AIMemoryKey.LastTargetPosition, out object posRaw);
 		Vector2 pos = (Vector2)posRaw;
 
-		if (_controller.Position.DistanceLess(pos, _controller.Actor.Scale))
+		if (_controller.Position.DistanceLess(pos, _controller.Actor.Scale * 2f))
 		{
 			_controller.ForceClearLastTarget();
 			return;

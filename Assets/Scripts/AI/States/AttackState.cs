@@ -1,8 +1,4 @@
-﻿using System;
-
-using UnityEngine;
-
-namespace YaEm.AI.States
+﻿namespace YaEm.AI.States
 {
 	public class AttackState : IUtility
 	{
@@ -29,7 +25,8 @@ namespace YaEm.AI.States
 				new SupressFire(),
 				new SeekTarget(),
 				new	ChangePosition(),
-				new RetreatToSavePosition()
+				new RetreatToSavePosition(),
+				new StayNearMedic()
 			});
 		}
 

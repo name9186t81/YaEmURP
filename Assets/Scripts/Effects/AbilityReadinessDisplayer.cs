@@ -23,10 +23,12 @@ namespace YaEm.Effects
 				Debug.LogWarning("Actor " + actor.Name + " does not have ability!");
 				Destroy(this);
 			}
+			_actor = actor;
 		}
 
 		private void Update()
 		{
+			if (_actor == null) return;
 			_renderer.color = _renderer.color.WhiteOut(1 - _ability.Readiness);
 		}
 	}

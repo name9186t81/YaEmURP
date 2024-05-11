@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 915913bc18718264ab2fa329fd3d8151, type: 3}
+  m_Name: Test4
+  m_EditorClassIdentifier: 
+  _mainText: Or you prefer <veryfast>very fast text like this<pause>?</pause></veryfast>
+    What do <b>you</b> say?
+  _options:
+  - {fileID: 11400000, guid: b13c46ff68f9b6d409ac72e7fef5bb0d, type: 2}
+  _autoSwitch: 0
+  _nextDialogue: {fileID: 11400000, guid: 6d1bb7118f9ece24aba50b64fe3dac5a, type: 2}
+  _stayTime: 2

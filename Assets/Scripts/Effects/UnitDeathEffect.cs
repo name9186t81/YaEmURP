@@ -43,7 +43,7 @@ public class UnitDeathEffect : MonoBehaviour, IActorComponent
 			renderer.sprite = _texture;
 			if(_actor is ITeamProvider prov2)
 			{
-				renderer.color = ColorTable.GetColor(prov2.TeamNumber);
+				renderer.color = ServiceLocator.Get<ColorTable>().GetColor(prov2.TeamNumber);
 			}
 		}
 		else

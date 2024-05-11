@@ -63,6 +63,8 @@ namespace YaEm.Effects
 		[SerializeField] private bool _changeTeamColor;
 		[SerializeField] private int _count;
 		[SerializeField] private bool _activeFromStart = false;
+		[SerializeField] private bool _affectedByTimeScale = true;
+		private GlobalTimeModifier _timeMod;
 		private Gradient _grad;
 		private IActor _actor;
 		private Segment[] _segments;
@@ -71,12 +73,23 @@ namespace YaEm.Effects
 
 		public IActor Actor { set => _actor = value; }
 
-		private void Awake()
+		public void SetSprite(Sprite sprite)
+		{
+			_base = sprite;
+		}
+
+		private void Start()
 		{
 			_segments = new Segment[_count];
 			_grad = _colorOverTrail;
 			_cached = transform;
 			bool isRect = transform.TryGetComponent<RectTransform>(out var selfRect);
+
+			if(_affectedByTimeScale && !ServiceLocator.TryGet<GlobalTimeModifier>(out _timeMod))
+			{
+				Debug.LogWarning("Cannot find global time mod");
+			}
+
 			if(isRect && !TryGetComponent<Canvas>(out _))
 			{
 				var c = gameObject.AddComponent<Canvas>();
@@ -122,7 +135,7 @@ namespace YaEm.Effects
 			for(int i = 0; i < _count; ++i)
 			{
 				var segment = _segments[i];
-				segment.Elapsed += Time.deltaTime;
+				segment.Elapsed += Time.deltaTime * (_timeMod != null ? _timeMod.TimeModificator : 1f);
 				if(segment.Elapsed > _duration)
 				{
 					segment.Renderer.Enabled = true;
@@ -172,7 +185,7 @@ namespace YaEm.Effects
 
 		private void UpdateGradient(int team)
 		{
-			_grad = ColorTable.GetColoredGradient(_colorOverTrail, team);
+			_grad = ServiceLocator.Get<ColorTable>().GetColoredGradient(_colorOverTrail, team);
 		}
 		private void Changed(int arg1, int arg2)
 		{

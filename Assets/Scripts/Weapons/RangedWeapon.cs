@@ -79,7 +79,7 @@ namespace YaEm.Weapons
 			OnPreFireStart += () => PreFireStart?.Invoke();
 			OnFire += () => Fire?.Invoke();
 			OnPreFireEnd += () => PreFireEnd?.Invoke();
-			OnEndFire += () => EndFire?.Invoke();
+			OnAttackEnded += () => EndFire?.Invoke();
 
 			_effects = new List<IEffect<IWeapon>>();
 			_spreadProvider = SpreadProviderFactory.GetSpread(_spreadType, _spreadIterations, _spreadAngle * Mathf.Deg2Rad, _spreadOffset);
@@ -148,7 +148,7 @@ namespace YaEm.Weapons
 			_actor.OnControllerChange += UpdateInput;
 			UpdateInput(null, _actor.Controller);
 
-			if(_actor is IProvider<IHealth> prov && !_keepAfterDeath)
+			if(_actor is IProvider<IHealth> prov && !_keepAfterDeath && prov != null && prov.Value != null)
 			{
 				prov.Value.OnDeath += UnSub;
 			}
@@ -244,6 +244,7 @@ namespace YaEm.Weapons
 			return _types.Contains(type);
 		}
 
+		public PolarTransform PolarTransform => _polarTransform == null ? GetComponent<PolarTransform>() : _polarTransform; //again why do i have it instead of math extension?
 		public bool CanFire { get => _canFire; set => _canFire = value; }
 		public bool CanAttack => !_isFiring && _canFire;
 

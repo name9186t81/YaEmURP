@@ -7,8 +7,8 @@ namespace YaEm.Health
 {
 	public sealed class DamageArgs : EventArgs
 	{
+		public int Damage;
 		public readonly IActor Sender;
-		public readonly int Damage;
 		public readonly DamageFlags DamageFlags;
 		public readonly IWeapon Weapon;
 		public Vector2 HitPosition;

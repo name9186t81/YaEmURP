@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace YaEm.GUI
 {
-	[DisallowMultipleComponent()]
+	[DisallowMultipleComponent(), RequireComponent(typeof(Button))]
 	public sealed class SelectableTraitDisplay : MonoBehaviour
 	{
 		[SerializeField] private Image _selectBox;
@@ -25,14 +25,17 @@ namespace YaEm.GUI
 			{
 				button.onClick.AddListener(() => OnClick?.Invoke(_value));
 			}
+			else
+			{
+				Debug.LogWarning("WHERE IS MY BUTTON?!");
+			}
 		}
 
-		public void UpdateDisplay(Sprite sprite, string text, string value, GameObject prefab = null)
+		public void UpdateDisplay(Sprite sprite, string text, string value)
 		{
 			_image.sprite = sprite;
 			_text.text = text;
 			_value = value;
-			if (prefab != null) _prefab = prefab;
 		}
 
 		public void Select()
